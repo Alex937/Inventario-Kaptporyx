@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Login y Registro</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  
+<main>
+  <div class="login-container">
+    <h2>Iniciar sesión</h2>
+    <form onsubmit="iniciarSesion(event)">
+      <input type="text" id="loginUsuario" placeholder="Usuario" required>
+      <input type="password" id="loginClave" placeholder="Contraseña" required>
+      <button type="submit">Ingresar</button>
+      <p id="mensajeError" style="color:red;"></p>
+    </form>
+
+    <hr style="margin: 2em 0;">
+
+    <h2>Registrar nuevo usuario</h2>
+    <form onsubmit="registrarUsuario(event)">
+      <input type="text" id="registroUsuario" placeholder="Nombre de usuario" required>
+      <input type="password" id="registroClave" placeholder="Contraseña (mínimo 6)" required minlength="6">
+      <select id="registroRol" required>
+        <option value="">Seleccionar rol</option>
+        <option value="Administrador">Administrador</option>
+        <option value="Funcionario">Funcionario</option>
+      </select>
+      <button type="submit">Registrar</button>
+      <p id="mensajeRegistro" style="color:green;"></p>
+    </form>
+  </div>
+</main>
+
+  <script src="js/login.js"></script>
+<body class="login-page"></body>
+</html>
