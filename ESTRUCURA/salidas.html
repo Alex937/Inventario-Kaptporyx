@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard - Inventario</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<script>
+  const usuarioActivo = sessionStorage.getItem("usuarioActivo");
+  if (!usuarioActivo) {
+    window.location.href = "login.html";
+  }
+</script>
+<body>
+<header style="display: flex; justify-content: space-between; align-items: center; background-color: #121212; padding: 1em;">
+  <div style="height: 60px; overflow: hidden; display: flex; align-items: center;">
+    <img src="images/KAPTORYX.png" alt="KAPTORYX" style="height: 270px;">
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 1em;">
+
+    <nav>
+      <a href="index.html">Dashboard</a>
+      <a href="inventario.html">Inventario</a>
+      <a href="entradas.html">Entradas</a>
+      <a href="salidas.html">Salidas</a>
+      <a href="nuevos.html">Nuevos</a>
+      <a href="recuperados.html">Recueperado</a>
+      <a href="malos.html">Malos</a>
+      <a href="obsoletos.html">Obsoletos</a>
+    </nav>
+
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span id="usuarioBienvenido" style="font-size: 0.9em; color: #ccc;"></span>
+      <button onclick="cerrarSesion()" style="padding: 6px 12px; background-color: #e74c3c; color: white; border: none; border-radius: 5px; cursor: pointer;">
+        Cerrar sesión
+      </button>
+    </div>
+  </div>
+</header>
+
+  <main>
+    <h2>Registrar salida</h2>
+<form id="formulario-salida" class="formulario-inv" style="display: flex; gap: 10px; flex-wrap: wrap;">
+  <select id="parte-salida" required>
+    <option value="">Selecciona un repuesto</option>
+    <!-- Se llenará dinámicamente -->
+  </select>
+
+  <input type="number" id="cantidad-salida" placeholder="Cantidad" min="1" required>
+
+  <select id="tipo-salida" required>
+    <option value="">Tipo de salida</option>
+    <option value="Venta">Venta</option>
+    <option value="Garantía">Garantía</option>
+    <option value="Desgaste">Desgaste</option>
+    <option value="Avería">Avería</option>
+  </select>
+
+  <button type="submit" style="background-color: #00cfe8; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer;">
+    Guardar
+  </button>
+</form>
+
+   <h3>Historial de salidas</h3>
+<div style="overflow-x: auto;">
+  <table class="tabla-inventario" id="tabla-salidas">
+    <thead>
+      <tr>
+        <th>Parte</th>
+        <th>Descripción</th>
+        <th>Estado</th>
+        <th>Cantidad</th>
+        <th>Tipo de salida</th>
+        <th>Fecha</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Se llena con JS -->
+    </tbody>
+  </table>
+</div>
+
+    <!-- Filas se insertarán desde JavaScript -->
+  </tbody>
+</table>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 - Alexander Mora v3.0</p>
+  </footer>
+  <script src="js/script.js"></script>
+</body>
+</html>
