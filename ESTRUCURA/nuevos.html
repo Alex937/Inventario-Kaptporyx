@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard - Inventario</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<script>
+  const usuarioActivo = sessionStorage.getItem("usuarioActivo");
+  if (!usuarioActivo) {
+    window.location.href = "login.html";
+  }
+</script>
+<body>
+ <header style="display: flex; justify-content: space-between; align-items: center; background-color: #121212; padding: 1em;">
+  <div style="height: 60px; overflow: hidden; display: flex; align-items: center;">
+    <img src="images/KAPTORYX.png" alt="KAPTORYX" style="height: 270px;">
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 1em;">
+
+    <nav>
+      <a href="index.html">Dashboard</a>
+      <a href="inventario.html">Inventario</a>
+      <a href="entradas.html">Entradas</a>
+      <a href="salidas.html">Salidas</a>
+      <a href="nuevos.html">Nuevos</a>
+      <a href="recuperados.html">Recueperado</a>
+      <a href="malos.html">Malos</a>
+      <a href="obsoletos.html">Obsoletos</a>
+    </nav>
+
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span id="usuarioBienvenido" style="font-size: 0.9em; color: #ccc;"></span>
+      <button onclick="cerrarSesion()" style="padding: 6px 12px; background-color: #e74c3c; color: white; border: none; border-radius: 5px; cursor: pointer;">
+        Cerrar sesión
+      </button>
+    </div>
+  </div>
+</header>
+
+  <main>
+    <h2>Repuestos Nuevos</h2>
+<table class="tabla-inventario">
+  <thead>
+    <tr>
+      <th>N° Parte</th>
+      <th>Descripción</th>
+      <th>Cantidad</th>
+      <th>Estado</th>
+      <th>Ubicación</th>
+    </tr>
+  </thead>
+  <tbody id="tablaNuevos">
+    <!-- Filas se insertarán desde JavaScript -->
+  </tbody>
+</table>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 - Alexander Mora v3.0</p>
+  </footer>
+  <script src="js/script.js"></script>
+</body>
+</html>
