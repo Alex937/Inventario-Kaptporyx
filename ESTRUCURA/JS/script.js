@@ -1,25 +1,29 @@
-// 👉 Función para agregar productos
+// Función para agregar un nuevo porducto al inventario
 function agregarProducto() {
+  // Obtenemos los valores de los campos del formulario
   const parte = document.getElementById("parte").value;
   const descripcion = document.getElementById("descripcion").value;
   const cantidad = document.getElementById("cantidad").value;
   const estado = document.getElementById("estado").value;
   const ubicacion = document.getElementById("ubicacion").value;
-
+  // Verificamos que todos los campos estén llenos
   if (parte && descripcion && cantidad && estado && ubicacion) {
     let inventario = JSON.parse(localStorage.getItem("inventario")) || [];
+    // Agregamos el nuevo producto al invetario 
     inventario.push({ parte, descripcion, cantidad, estado, ubicacion });
     localStorage.setItem("inventario", JSON.stringify(inventario));
 
-    // ✅ Solo recarga la tabla, no insertes directamente
+    // Lo reflejamos visualmente en la tablamiercole
     cargarProductos();
+
+    // Limpiamos el formulario luego de agregar
     document.getElementById("formulario-producto").reset();
   } else {
     alert("Por favor, completa todos los campos.");
   }
 }
 
-// 👉 Función para registrar usuarios desde index.html
+// Función para registrar nuevos  usuarios desde desde el formulario
 function registrarUsuario(event) {
   event.preventDefault();
 
@@ -27,6 +31,7 @@ function registrarUsuario(event) {
   const clave = document.getElementById("clave").value;
   const rol = document.getElementById("rol").value;
 
+  // Validación básica de seuridad
   if (clave.length < 6) {
     alert("La contraseña debe tener al menos 6 caracteres.");
     return;
@@ -34,12 +39,14 @@ function registrarUsuario(event) {
 
   let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
 
+  // Colocamos si el nombre ya está registrado
   const duplicado = usuarios.some(u => u.nombre.toLowerCase() === nombre.toLowerCase());
   if (duplicado) {
-    alert(`❌ El usuario "${nombre}" ya existe.`);
+    alert(` El usuario "${nombre}" ya existe.`);
     return;
   }
 
+  // Guardamos el nuevo usuario
   const nuevoUsuario = { nombre, clave, rol };
   usuarios.push(nuevoUsuario);
   localStorage.setItem("usuarios", JSON.stringify(usuarios));
@@ -48,11 +55,12 @@ function registrarUsuario(event) {
   document.querySelector("form").reset();
 }
 
+// Muestra los ususrios registrados 
 function mostrarUsuarioActivo() {
   const usuarioJSON = sessionStorage.getItem("usuarioActivo");
   if (!usuarioJSON) return;
 
-  const usuario = JSON.parse(usuarioJSON); // ✅ Parseamos el objeto
+  const usuario = JSON.parse(usuarioJSON); 
 
   const bienvenida = document.getElementById("usuarioBienvenido");
   if (bienvenida && usuario?.nombre && usuario?.rol) {
@@ -60,7 +68,7 @@ function mostrarUsuarioActivo() {
   }
 }
 
-// 👉 Ejecutar al cargar la página
+// Esta funcion se ejecuta automaticamnete  al cargar la página
 document.addEventListener("DOMContentLoaded", () => {
   mostrarUsuarioActivo();
 
@@ -86,7 +94,6 @@ document.addEventListener("DOMContentLoaded", () => {
     idTabla = "tablaObsoletos";
   }
 
-
   if (estadoEsperado && idTabla) {
     const tabla = document.getElementById(idTabla);
     const filtrados = inventario.filter(item => item.estado.toLowerCase() === estadoEsperado);
@@ -106,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
    if (path.includes("index")) {
     calcularTotalProductos();
-    mostrarBajoStock(); // ✅ Mostrar solo en el Dashboard
+    mostrarBajoStock(); // 
   }
   
   if (path.includes("index")) {
@@ -118,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (path.includes("entradas")) {
-    cargarEntradas(); // ✅ mostrar todo
+    cargarEntradas(); 
   }
 
   if (path.includes("recuperados")) {
@@ -144,21 +151,23 @@ document.addEventListener("DOMContentLoaded", () => {
   if (path.includes("index")) {
   calcularTotalProductos();
   mostrarBajoStock();
-  generarGraficaInventario(); // ✅ Agrega esta línea
+  generarGraficaInventario(); 
 }
 });
 
-// 👉 Función para cerrar sesión calcularTotalProductos();
+// Cierra la sesión y redirige al login
 function cerrarSesion() {
   sessionStorage.removeItem("usuarioActivo");
   window.location.href = "login.html";
 }
 
+// Carga todos los productos del inventario
 function cargarInventario() {
   const inventario = JSON.parse(localStorage.getItem("inventario")) || [];
   inventario.forEach(producto => insertarFila(producto));
 }
 
+// Permite buscar productos por palabra clave
 function buscarInventario() {
   const query = document.getElementById("busquedaInput").value.toLowerCase();
   const tabla = document.getElementById("tablaBusqueda");
@@ -195,6 +204,8 @@ filtrados.forEach(producto => {
 
   tabla.style.display = "table";
 }
+
+// Calcular el total de los productos sumando las cantidades incluso si hay productos repetidos
 function calcularTotalProductos() {
   const inventario = JSON.parse(localStorage.getItem("inventario")) || [];
 
@@ -230,12 +241,12 @@ function calcularTotalProductos() {
   }
 }
 
-// 👉 Función para insertar fila con botones de editar/eliminar
+// Agrega visualmente una fila a la tabla con los datos del producto 
 function insertarFila(producto, index) {
   const tabla = document.getElementById("tabla-inventario").getElementsByTagName("tbody")[0];
   const fila = tabla.insertRow();
 
-  // ✅ Recuperar usuario desde sessionStorage
+  // Obtener el rol del usuario activo
   const usuarioJSON = sessionStorage.getItem("usuarioActivo");
   let rol = "empleado"; // Valor por defecto
 
@@ -244,7 +255,7 @@ function insertarFila(producto, index) {
     rol = usuario.rol?.toLowerCase() || "empleado";
   }
 
-  // ✅ Solo los administradores pueden editar/eliminar
+  // Mostrar botones solo si el usuario es administrador
   let accionesHTML = "";
   if (rol === "admin" || rol === "administrador") {
     accionesHTML = `
@@ -252,7 +263,7 @@ function insertarFila(producto, index) {
       <button onclick="eliminarProducto(${index})">Eliminar</button>
     `;
   }
-
+  // Agregar los datos del producto y las acciones a la fila
   fila.innerHTML = `
     <td>${producto.parte}</td>
     <td>${producto.descripcion}</td>
@@ -263,7 +274,7 @@ function insertarFila(producto, index) {
   `;
 }
 
-// 👉 Cargar los productos al cargar la página
+// Carga todos los productos del inventario
 function cargarProductos() {
   const inventario = JSON.parse(localStorage.getItem("inventario")) || [];
   const tabla = document.getElementById("tabla-inventario").getElementsByTagName("tbody")[0];
@@ -273,7 +284,7 @@ function cargarProductos() {
   });
 }
 
-// 👉 Función para eliminar producto
+// Función para eliminar producto
 function eliminarProducto(index) {
   let inventario = JSON.parse(localStorage.getItem("inventario")) || [];
   inventario.splice(index, 1);
@@ -281,20 +292,23 @@ function eliminarProducto(index) {
   cargarProductos();
 }
 
+//Carga los datos del producto en el formulario para el editarlo 
 function editarProducto(index) {
   const inventario = JSON.parse(localStorage.getItem("inventario")) || [];
   const producto = inventario[index];
 
+  //Rellena campos del formulario con los datos existentes
   document.getElementById("parte").value = producto.parte;
   document.getElementById("descripcion").value = producto.descripcion;
   document.getElementById("cantidad").value = producto.cantidad;
   document.getElementById("estado").value = producto.estado;
   document.getElementById("ubicacion").value = producto.ubicacion;
 
-  // 👉 Guarda el índice en el botón unificado
+  // Guarda el índice para saber si estamos editando
   document.getElementById("btnGuardar").setAttribute("data-index", index);
 }
 
+//Guarda un producto nuevo o actualizado
 function guardarProducto() {
   const parte = document.getElementById("parte").value;
   const descripcion = document.getElementById("descripcion").value;
@@ -312,11 +326,11 @@ function guardarProducto() {
   const index = document.getElementById("btnGuardar").getAttribute("data-index");
 
   if (index) {
-    // 👉 Modo edición
+    // Si estamos editando un producto
     inventario[parseInt(index)] = { parte, descripcion, cantidad, estado, ubicacion };
     alert("Producto actualizado correctamente.");
   } else {
-    // 👉 Modo nuevo
+    // Si es un producto nuevo
     inventario.push({ parte, descripcion, cantidad, estado, ubicacion });
     alert("Producto agregado correctamente.");
   }
@@ -325,11 +339,12 @@ function guardarProducto() {
 
   cargarProductos();
 
-  // ✅ Limpia el formulario y estado
+
   document.getElementById("formulario-producto").reset();
   document.getElementById("btnGuardar").removeAttribute("data-index");
 }
 
+// Cargar los productos en la pestaña de entredas
 function cargarEntradas() {
   const inventario = JSON.parse(localStorage.getItem("inventario")) || [];
   const tabla = document.getElementById("tablaEntradas").getElementsByTagName("tbody")[0];
@@ -348,6 +363,7 @@ function cargarEntradas() {
   });
 }
 
+// Filtrar porducots por estado (Nuevo, Malos, etc.)
 function cargarPorEstado(estadoEsperado, idTabla) {
   const inventario = JSON.parse(localStorage.getItem("inventario")) || [];
   const tabla = document.getElementById(idTabla).getElementsByTagName("tbody")[0];
@@ -368,7 +384,7 @@ function cargarPorEstado(estadoEsperado, idTabla) {
   });
 }
 
-// 👉 Cargar repuestos disponibles en el select
+// Cargar las opciones disponibles en el boton para registrar una salida
 function cargarSelectSalida() {
   const inventario = JSON.parse(localStorage.getItem("inventario")) || [];
   const select = document.getElementById("parte-salida");
@@ -380,7 +396,7 @@ function cargarSelectSalida() {
   });
 }
 
-// 👉 Registrar salida
+// Registrar salida de repuesto del inventario
 document.getElementById("formulario-salida").addEventListener("submit", function (e) {
   e.preventDefault();
 
@@ -396,10 +412,10 @@ document.getElementById("formulario-salida").addEventListener("submit", function
     return;
   }
 
-  // 🧮 Restar cantidad
+  // Actualiza el inventario
   inventario[index].cantidad -= cantidadSalida;
 
-  // ✅ Registrar salida
+  // Registrar la salida
   salidas.push({
     parte: inventario[index].parte,
     descripcion: inventario[index].descripcion,
@@ -418,6 +434,7 @@ document.getElementById("formulario-salida").addEventListener("submit", function
   mostrarSalidas();     // si tienes una tabla abajo
 });
 
+// Muestra todas las salidas registradas
 function mostrarSalidas() {
   const salidas = JSON.parse(localStorage.getItem("salidas")) || [];
   const tabla = document.getElementById("tabla-salidas")?.getElementsByTagName("tbody")[0];
@@ -437,6 +454,8 @@ function mostrarSalidas() {
     tabla.appendChild(fila);
   });
 }
+
+// Muestra productos "Nuevos" con menos de 3 unidades (Stock bajo)
   function mostrarBajoStock() {
     const tabla = document.getElementById("tabla-bajo-stock").getElementsByTagName("tbody")[0];
     tabla.innerHTML = ""; // Limpiar tabla
@@ -456,6 +475,7 @@ function mostrarSalidas() {
     });
   }
 
+// Genera grafia con cantida de productos por estado usando chart.js
 function generarGraficaInventario() {
   const inventario = JSON.parse(localStorage.getItem("inventario")) || [];
 
@@ -475,7 +495,7 @@ function generarGraficaInventario() {
 
   const ctx = document.getElementById('graficaInventario').getContext('2d');
   new Chart(ctx, {
-    type: 'bar', // Cambia a 'bar' si prefieres barras
+    type: 'bar', // Barras
     data: {
       labels: ['Nuevos', 'Recuperados', 'Malos', 'Obsoletos'],
       datasets: [{
